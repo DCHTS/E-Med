@@ -1,0 +1,7 @@
+Vārds:John
+Uzvārds:Snow
+Personas kods:wadfa
+Deklerētā adrese:khiu
+Faktiskā adrese:hi
+Telefona nr:uhi
+E-pasts:uh
