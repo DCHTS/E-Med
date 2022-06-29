@@ -9,8 +9,8 @@ import java.sql.Statement;
 
 public class Registration extends JDialog {
     private JTextField aEmail;
-    private JTextField aPassword;
-    private JTextField aPasswordAg;
+    private JTextField aPassword; // Jāizmanto JPasswordField, lai neredz lietotāja input
+    private JTextField aPasswordAg; // Jāizmanto JPasswordField, lai neredz lietotāja input
     private JTextField aSurname;
     private JTextField aPersonID;
     private JTextField aLocation;
