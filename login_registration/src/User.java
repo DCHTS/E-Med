@@ -6,4 +6,5 @@ public class User {
     public String personID;
     public String location;
     public String phone;
+    public String gender;
 }

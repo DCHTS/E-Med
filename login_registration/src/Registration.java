@@ -18,13 +18,27 @@ public class Registration extends JDialog {
     private JButton registerBTN;
     private JPanel registracija;
     private JTextField aName;
+    private JRadioButton genderM;
+    private JRadioButton genderW;
+    private JCheckBox agr;
+    public String gender;
+
+    public void getGender(){
+        if(genderM.isSelected()){
+            gender = "Vīrietis";
+        } else {
+            gender = "Sieviete";
+        }
+    }
+
+
 
     public Registration(JFrame parent) {
         super(parent);
         setTitle("Reģistrācija");
         setModal(true);
         setContentPane(registracija);
-        setMinimumSize(new Dimension(450, 474));
+        setMinimumSize(new Dimension(650, 474));
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         registerBTN.addActionListener(new ActionListener() {
@@ -45,8 +59,10 @@ public class Registration extends JDialog {
         String personID = aPersonID.getText();
         String location = aLocation.getText();
         String phone = aPhone.getText();
+        String genderP = gender;
 
-        if (email.isEmpty() || password.isEmpty() || passwordAd.isEmpty() || name.isEmpty() || surname.isEmpty() || personID.isEmpty() || location.isEmpty() || phone.isEmpty()) {
+
+        if (email.isEmpty() || password.isEmpty() || passwordAd.isEmpty() || name.isEmpty() || surname.isEmpty() || personID.isEmpty() || location.isEmpty() || phone.isEmpty() || (genderM.isSelected()==false && genderW.isSelected()==false)) {
             JOptionPane.showMessageDialog(this,
                     "Lūdzu aizpildi visus lauciņus!",
                     "Mēģini vēlreiz!",
@@ -62,7 +78,15 @@ public class Registration extends JDialog {
             return;
         }
 
-        user = addUserToDB(email, password, name, surname, personID, location, phone);
+        if(!agr.isSelected()){
+            JOptionPane.showMessageDialog(this,
+                    "Tev ir jāpiekrīt lietošanas noteikumiem",
+                    "Mēģini vēlreiz!",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        user = addUserToDB(email, password, name, surname, personID, location, phone, genderP);
         if (user != null) {
             dispose();
         } else {
@@ -75,39 +99,19 @@ public class Registration extends JDialog {
 
     public User user;
 
-    private User addUserToDB(String email, String password, String name, String surname, String personID, String location, String phone) {
+    private User addUserToDB(String email, String password, String name, String surname, String personID, String location, String phone, String gender) {
         User user = null;
-        final String DB_URL = "jdbc:mysql://127.0.0.1:3306";
+        final String DB_URL = "jdbc:mysql://localhost:3306";
         final String USERNAME = "root";
-        final String PASSWORD = "";
-
-        // Vēlāk izpētīšu kā nosharot MySQL datubāzes, bet testēšanai vienkārši iekopē šo kodu query savā mysql workbenchā un tad piekļuvi attiecīgi nomaini tepat 80-82 rindiņās
-
-        // create database projectRCS
-
-        // use projectRCS
-
-        // CREATE TABLE `users` (
-        //  `ID` int NOT NULL AUTO_INCREMENT,
-        //  `email` varchar(16) NOT NULL,
-        //  `password` varchar(255) DEFAULT NULL,
-        //  `name` varchar(32) NOT NULL,
-        //  `surname` varchar(32) DEFAULT NULL,
-        //  `personID` varchar(45) DEFAULT NULL,
-        //  `location` varchar(45) DEFAULT NULL,
-        //  `phone` int DEFAULT NULL,
-        //  PRIMARY KEY (`ID`),
-        //  UNIQUE KEY `ID_UNIQUE` (`ID`)
-
-        // Ja kādi jautājumi, raksti
-
+        final String PASSWORD = "ozo9linsh";
 
         try {
             Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 
             Statement stmt = conn.createStatement();
-            String sql = "INSERT INTO projectRCS.users (email, password, name, surname, personID, location, phone) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+            String sql = "INSERT INTO projectRCS.users (email, password, name, surname, personID, location, phone, gender) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, password);
@@ -116,6 +120,7 @@ public class Registration extends JDialog {
             preparedStatement.setString(5, personID);
             preparedStatement.setString(6, location);
             preparedStatement.setString(7, phone);
+            preparedStatement.setString(8, gender);
 
             int addedRows = preparedStatement.executeUpdate();
             if (addedRows > 0) {
@@ -127,8 +132,8 @@ public class Registration extends JDialog {
                 user.personID = personID;
                 user.location = location;
                 user.phone = phone;
+                user.genderQ = gender;
             }
-
             stmt.close();
             conn.close();
         } catch (Exception e) {
@@ -138,5 +143,4 @@ public class Registration extends JDialog {
 
     }
 }
-
 
