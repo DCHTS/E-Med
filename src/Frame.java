@@ -1,10 +1,7 @@
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.*;
 import java.util.Scanner;
 
@@ -12,12 +9,19 @@ public class Frame implements ActionListener {
 
     private static JLabel patientInfo, diagAndMed, testsAndResults, vaccines, sickList;
 
+    String[] columnNames = {"Vārds", "Uzvārds", "Personas kods", "Deklerētā adrese",
+            "Faktiskā adrese", "Telefona nr", "E-pasts"}; //Pacientu saraksta tabulas kolonas
+
+    String selectedPatientName, selectedPatientSurname; //Izvēlētā pacienta v., uzv.
+
     JTable jt = new JTable();
     JFrame frame = new JFrame();
     JPanel panel = new JPanel();
     JPanel topPanel = new JPanel();
 
     JPanel patientVisit = new JPanel();
+
+    JPanel leftPanel = new JPanel();
 
     // Sadaļu paneļi
     JPanel dm, nr, potes, sl;
@@ -31,6 +35,7 @@ public class Frame implements ActionListener {
 
     JTextArea diaUnMed, nosUnRez, potesList, slimLap;
 
+    JTextArea pta = new JTextArea();
     List patientInfoList = new List();
 
     public void skel() throws FileNotFoundException {
@@ -44,9 +49,6 @@ public class Frame implements ActionListener {
 
         panel.setBackground(new Color(208, 239, 255));
 
-        // Izsauc pacienta lista metodi galvenajā kodā
-        list();
-
         // Augšējais panelis
         topPanel.setBackground(new Color(3, 37, 76));
         topPanel.setPreferredSize(new Dimension(100, 50));
@@ -55,7 +57,11 @@ public class Frame implements ActionListener {
         // Top paneļa pogas
         patientListBtn.setText("Pacientu saraksts");
         patientListBtn.addActionListener(e -> {
-            patientList();
+            try {
+                patientList();
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
         });
         topPanel.add(patientListBtn);
 
@@ -71,21 +77,11 @@ public class Frame implements ActionListener {
         });
         topPanel.add(doctor);
 
-
-
-
-//        patientInfo = new JLabel("");
-//        patientInfo.setBounds(200, 300, 200, 200);
-//        panel.add(patientInfo);
-
-
         /// LEFT PANEL ///
-        JPanel panel = new JPanel();
-        panel.setBorder(new TitledBorder("Pacients"));
-        panel.setBackground(new Color(208, 239, 255));
-        panel.setPreferredSize(new Dimension(320, 100));
-        frame.add(panel, BorderLayout.WEST);
-
+        leftPanel.setBorder(new TitledBorder("Pacients"));
+        leftPanel.setBackground(new Color(208, 239, 255));
+        leftPanel.setPreferredSize(new Dimension(320, 100));
+        frame.add(leftPanel, BorderLayout.WEST);
 
 
         /// MAIN SCREEN ///
@@ -119,7 +115,6 @@ public class Frame implements ActionListener {
         dm.add(edit);
 
 
-
         // DIAGNOZES UN MEDIKAMENTI SEKCIJA
         // Tāpat dažviet citur, šeit kods atkārtojas, līdz ar to varētu mēģināt izveidot klasi, kas ļautu
         // Izveidot sadaļas are vienu kodu, tā vietā, lai to kopētu 4x
@@ -131,16 +126,14 @@ public class Frame implements ActionListener {
         diaUnMed.setEditable(false);
         // Pagaidu rediģēšanas funkcija. Ar doubleclick var ieslēgt rediģēšanu, bet uz doto brīdi nevar izslēgt.
         diaUnMed.addMouseListener(new MouseAdapter() {
-                                      @Override
-                                      public void mouseClicked(MouseEvent e) {
-                                          if (e.getClickCount() == 2) {
-                                              diaUnMed.setEditable(true);
-                                          }
-                                      }
-                                  });
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    diaUnMed.setEditable(true);
+                }
+            }
+        });
         dm.add(sp3);
-
-
 
 
         // Pievienot jaunus datus panelim.
@@ -172,8 +165,6 @@ public class Frame implements ActionListener {
         nr.add(sp4);
 
 
-
-
         // Pievienot jaunus datus panelim.
         JButton add3 = new JButton("Pievienot");
         add3.addActionListener(e -> {
@@ -201,8 +192,6 @@ public class Frame implements ActionListener {
 //            }
         });
         potes.add(sp5);
-
-
 
 
         // Pievienot jaunus datus panelim.
@@ -234,82 +223,17 @@ public class Frame implements ActionListener {
         sl.add(sp6);
 
 
-
-
-
-
-
         // PACIENTA PERSONAS INFO
-        // Logs, kas uzrādas kreisajā panelī. list() metode ir jāpārraksta tā, lai Personas informācija uzrādītos šeit,
-        // kad viņu selecto Pacientu sarakstā
-        JTextArea ta2 = new JTextArea();
-        ta2.setBorder(new TitledBorder("Pacienta info šeit"));
-        ta2.setBackground(new Color(208, 239, 255));
-        ta2.setPreferredSize(new Dimension(250, 400));
-        ta2.setEditable(false);
-        panel.add(ta2);
 
-
+        pta.setBorder(new TitledBorder("Pacienta info"));
+        pta.setBackground(new Color(208, 239, 255));
+        pta.setPreferredSize(new Dimension(250, 400));
+        pta.setEditable(false);
     }
 
-    public void list() throws FileNotFoundException {
-
-        DefaultListModel<String> pacienti = new DefaultListModel<>();
-        //DEFINING FILE LOCATION
-        Scanner scanner = new Scanner(new File("patientList.txt"));
-
-        //CREATE A LIST FOR KEEPING INFORMATION FROM FILE
-        // read until end of file
-        while (scanner.hasNextLine()) {
-            patientInfoList.add(scanner.nextLine().split(":")[1]); //READING LINE BY LINE AND ADDING THEM TO LIST BEFORE SPLITTING THEM USING DELIMITER
-        }
-
-        // close the scanner
-        scanner.close();
-
-        //GETTING ITEMS FROM LIST
-        pacienti.addElement(patientInfoList.getItem(0) + " " + patientInfoList.getItem(1));
-
-//        pacienti.addElement();
-
-        JList<String> plist = new JList<>(pacienti);
-
-        plist.setPreferredSize(new Dimension(250, 200));
-        plist.setBackground(new Color(17, 103, 177));
-        plist.setFont(new Font("Calibri", Font.BOLD, 17));
-
-        plist.getSelectionModel().addListSelectionListener(e -> {
-            if(!e.getValueIsAdjusting()) { //ONLY CHANGE WHEN VALUE IS ADJUSTED
-                String[] columnNames = {"Vārds", "Uzvārds", "Personas kods", "Deklerētā adrese",
-                        "Faktiskā adrese", "Telefona nr", "E-pasts"};
-
-                Object[][] data = {
-                        {
-                                patientInfoList.getItem(0),
-                                patientInfoList.getItem(1),
-                                patientInfoList.getItem(2),
-                                patientInfoList.getItem(3),
-                                patientInfoList.getItem(4),
-                                patientInfoList.getItem(5),
-                                patientInfoList.getItem(6),
-                        },
-                };
-
-                JTable table = new JTable(data, columnNames);
-                table.setBounds(10, 10, 700, 200);
-
-                panel.add(new JScrollPane(table)); //ADD TABLE TO PANEL
-            }
-        });
-//        bottomPanel.add(plist);
-    }
-
-
-
-    // Jaunais pacientu saraksts, šeit pēc butības būtu jāveido JList ar pogu, kas acceptē izvēlēto personu un sniedz
-    // tās personas datus uz cietiem paneļiem. Ja viss sanāk, tad vēl var mēģināt izveidot "search bar", kur var
-    // meklēt pacientu pēc personas koda
-    public void patientList() {
+    // PACIENTU SARAKSTS
+    // Ja viss sanāk, tad vēl var mēģināt izveidot "search bar", kur var meklēt pacientu pēc personas koda
+    public void patientList() throws FileNotFoundException {
         JFrame frame = new JFrame("Pacientu saraksts");
         frame.setSize(500, 500);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -317,12 +241,48 @@ public class Frame implements ActionListener {
 
         JPanel panel = new JPanel();
         panel.setSize(500, 500);
-        panel.setLayout(null);
-        frame.add(panel);
+        frame.add(panel, BorderLayout.CENTER);
 
-//        Jlist list = new J
+        Scanner scanner = new Scanner(new File("patientList.txt")); //Pacientu saglabātā info fails
+
+        //Izveido faila info lasītāju, līdz faila beigām
+        while (scanner.hasNextLine()) {
+            patientInfoList.add(scanner.nextLine().split(":")[1]); //Lasa pa 1 līnijai, atdalot ievadīto info ar :
+        }
+
+        // Dabūt Pacienta datus tabulai
+        Object[][] data = {
+                {
+                        patientInfoList.getItem(0),
+                        patientInfoList.getItem(1),
+                        patientInfoList.getItem(2),
+                        patientInfoList.getItem(3),
+                        patientInfoList.getItem(4),
+                        patientInfoList.getItem(5),
+                        patientInfoList.getItem(6),
+                },
+        };
+
+        JTable table = new JTable(data, columnNames);
+        panel.add(new JScrollPane(table), BorderLayout.CENTER);
+
+        //Pievieno opciju izvēlēties pacientu no Pacientu Saraksta tabulas un attēlo izvēli Pacienta info panelī
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                int row = table.rowAtPoint(evt.getPoint()); //paņem info no izvēlētās tabulas rindas
+
+                selectedPatientName = table.getValueAt(row, 0).toString();
+                selectedPatientSurname = table.getValueAt(row, 1).toString();
+
+                //Aizver Pacientu Sarakstu, pēc pacienta izvēles
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                //Pievieno Pacienta v., uzv. Pacienta info, kreisajā panelī
+                pta.setText(selectedPatientName + " " + selectedPatientSurname);
+                leftPanel.add(pta);
+            }
+        });
     }
-
 
 
     // PIEVIENO DATUS IEKŠ "Diagnozes un Medikamenti"
@@ -455,7 +415,6 @@ public class Frame implements ActionListener {
     }
 
 
-
     // PIEVIENOT DATUS IEKŠ "Potes"
     public void pievienotDatusPotes() {
         JFrame frame = new JFrame("Pievienot Potes");
@@ -562,7 +521,6 @@ public class Frame implements ActionListener {
 
 
     }
-
 
 
     public void labotDatus() {
