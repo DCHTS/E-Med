@@ -9,7 +9,7 @@ public class Frame implements ActionListener {
 
     private static JLabel patientInfo, diagAndMed, testsAndResults, vaccines, sickList;
 
-    String[] columnNames = {"Vārds", "Uzvārds", "Personas kods", "Deklerētā adrese",
+    String[] columnNames = {"Vārds", "Uzvārds", "Personas kods", "Deklarētā adrese",
             "Faktiskā adrese", "Telefona nr", "E-pasts"}; //Pacientu saraksta tabulas kolonas
 
     String selectedPatientName, selectedPatientSurname; //Izvēlētā pacienta v., uzv.
