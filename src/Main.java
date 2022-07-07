@@ -5,9 +5,5 @@ public class Main {
         Login login = new Login();
         login.Login();
 
-        ///seit viss ir jasaliek kopa jo savadak strada atseviski logi
-//        Frame menu = new Frame();
-//        menu.skel();
-
     }
 }

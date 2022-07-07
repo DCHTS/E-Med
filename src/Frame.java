@@ -38,7 +38,7 @@ public class Frame implements ActionListener {
     JTextArea pta = new JTextArea();
     List patientInfoList = new List();
 
-    public void skel() throws FileNotFoundException {
+    public void skel()  {
 
         frame.setSize(1300, 800); // 1024x760 // 512x380 // 256x190
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
