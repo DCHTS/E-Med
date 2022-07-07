@@ -2,16 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
-import java.sql.*;
 
 
 public class Login extends JDialog {
     private JTextField email;
-    private JTextField password;
     private JButton btnL;
     private JButton btnR;
     private JPanel logins;
+    private JPasswordField password;
 
     Registration reg = new Registration();
 
