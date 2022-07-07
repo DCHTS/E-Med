@@ -110,9 +110,9 @@ public class Frame implements ActionListener {
         });
         dm.add(add);
 
-        JButton edit = new JButton("Labot");
-        // Vajag izveidot edit opciju, kas ļauj rediģēt tekstu un samaina esošo "Labot" pogu pret "Done"
-        dm.add(edit);
+//        JButton edit = new JButton("Labot");
+//        // Vajag izveidot edit opciju, kas ļauj rediģēt tekstu un samaina esošo "Labot" pogu pret "Done"
+//        dm.add(edit);
 
 
         // DIAGNOZES UN MEDIKAMENTI SEKCIJA
@@ -124,12 +124,14 @@ public class Frame implements ActionListener {
         diaUnMed.setLineWrap(true);
         diaUnMed.setWrapStyleWord(true);
         diaUnMed.setEditable(false);
-        // Pagaidu rediģēšanas funkcija. Ar doubleclick var ieslēgt rediģēšanu, bet uz doto brīdi nevar izslēgt.
+        // Pagaidu rediģēšanas funkcija. Ar doubleclick var ieslēgt rediģēšanu, izklikšķinot ārā, nevar rediģēt
         diaUnMed.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
                     diaUnMed.setEditable(true);
+                } else {
+                    diaUnMed.setEditable(false);
                 }
             }
         });
@@ -143,9 +145,8 @@ public class Frame implements ActionListener {
         });
         nr.add(add2);
 
-        JButton edit2 = new JButton("Labot");
-
-        nr.add(edit2);
+//        JButton edit2 = new JButton("Labot");
+//        nr.add(edit2);
 
         // NOSŪTĪJUMI UN REZULTĀTI SEKCIJA
         nosUnRez = new JTextArea(38, 86);
@@ -155,12 +156,14 @@ public class Frame implements ActionListener {
         nosUnRez.setWrapStyleWord(true);
         nosUnRez.setEditable(false);
         nosUnRez.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                if (e.getClickCount() == 2) {
-//                    nosUnRez.setEditable(true);
-//                }
-//            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    nosUnRez.setEditable(true);
+                } else {
+                    nosUnRez.setEditable(false);
+                }
+            }
         });
         nr.add(sp4);
 
@@ -172,9 +175,8 @@ public class Frame implements ActionListener {
         });
         potes.add(add3);
 
-        JButton edit3 = new JButton("Labot");
-
-        potes.add(edit3);
+//        JButton edit3 = new JButton("Labot");
+//        potes.add(edit3);
 
         // POTES SEKCIJA
         potesList = new JTextArea(38, 86);
@@ -184,12 +186,14 @@ public class Frame implements ActionListener {
         potesList.setWrapStyleWord(true);
         potesList.setEditable(false);
         potesList.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                if (e.getClickCount() == 2) {
-//                    nosUnRez.setEditable(true);
-//                }
-//            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    potesList.setEditable(true);
+                } else {
+                    potesList.setEditable(false);
+                }
+            }
         });
         potes.add(sp5);
 
@@ -201,9 +205,8 @@ public class Frame implements ActionListener {
         });
         sl.add(add4);
 
-        JButton edit4 = new JButton("Labot");
-
-        sl.add(edit4);
+//        JButton edit4 = new JButton("Labot");
+//        sl.add(edit4);
 
         // SLIMĪBAS LAPAS SEKCIJA
         slimLap = new JTextArea(38, 86);
@@ -213,12 +216,14 @@ public class Frame implements ActionListener {
         slimLap.setWrapStyleWord(true);
         slimLap.setEditable(false);
         slimLap.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                if (e.getClickCount() == 2) {
-//                    nosUnRez.setEditable(true);
-//                }
-//            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    slimLap.setEditable(true);
+                } else {
+                    slimLap.setEditable(false);
+                }
+            }
         });
         sl.add(sp6);
 
