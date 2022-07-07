@@ -1,7 +1,7 @@
 Vārds:Janis
 Uzvārds:Sniedzins
 Personas kods:11111111111
-Deklerētā adrese:hfghhg
+Deklarētā adrese:hfghhg
 Faktiskā adrese:fhfgh
 Telefona nr:222222222
 E-pasts:ljklkl
