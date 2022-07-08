@@ -1,0 +1,7 @@
+Vārds:Jānis
+Uzvārds:Dambis
+Personas kods:300792-12345
+Deklerētā adrese:Krāsotāju iela 13-3 Rīga LV-1055
+Faktiskā adrese:Krāsotāju iela 13-3 Rīga LV-1055
+Telefona nr:22334455
+E-pasts:email2@mail.com
